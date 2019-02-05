@@ -12,9 +12,11 @@ namespace Maandag
 
     static class Game
     {
-        public static Player player = new Player();
-        public static Room currentRoom = new Room1();
-        
+        public static Player player;
+        //public static Room currentRoom;
+        public static List<Room1> roomList;
+
+        public static List<Weapon> weaponList;
 
         private const string E = "exit";
         private const string B = "begin";
@@ -22,7 +24,8 @@ namespace Maandag
 
 
 
-        public static void begin() {
+        public static void begin()
+        {
             //De currentRoom bepaald wat er gebeurt,
             //De start returnt een boolean die bepaald of je gefaald hebt of niet
 
@@ -31,15 +34,12 @@ namespace Maandag
             Console.ReadLine();
 
             bool done = false;
-            bool result;
-            while (!done)
-            {
+            bool result = false;
+            foreach (Room1 currentRoom in roomList) { 
                 result = currentRoom.start();
                 if (result)
                 {
                     Console.WriteLine("You finished this room, you can continue to the next room");
-                    currentRoom = new Room2();//Dit wordt 2 enzovoort tot 
-                    currentRoom.start();
                 }
                 else
                 {
@@ -47,7 +47,12 @@ namespace Maandag
                     Game.stop();
                 }
             }
-            
+            Console.WriteLine("Congratulations! YOU WON THE GAME!!!");
+            Console.WriteLine("Press enter to close");
+            Console.ReadLine();
+
+
+
 
         }
 
@@ -57,6 +62,8 @@ namespace Maandag
         //Ondertussen kan hij ook stop aanroepen
         public static void start()
         {
+            Game.initialize();
+
             Console.WriteLine(@"            )                          *         
               *   )  ( /(        (        (      (  `        
             ` )  /(  )\()) (     )\ )     )\     )\))(   (   
@@ -102,6 +109,70 @@ namespace Maandag
                 }
             }
             
+        }
+
+        private static void initialize()
+        {
+            player = new Player();
+
+            //Create monsters
+            Monster monster = new Monster();
+            monster.image = @" ((`\
+            ___ \\ '--._
+         .'`   `'    o  )
+        /    \   '. __.'
+       _ |    / _  \ \_\_
+  jgs   { _\______\-'\__\_\";
+            monster.name = "Bunny";
+            monster.weakpoint = "Brick";
+
+            Monster m2 = new Monster();
+            m2.image = @"                   .     _,
+                   |`\__/ /
+                   \  . .(
+                    | __T|
+                   /   |
+      _.---======='    |
+     //               {}
+    `|      ,   ,     {}
+     \      /___;    ,'
+      ) ,-;`    `\  //
+     | / (        ;||
+     ||`\\        |||
+     ||  \\       |||
+jgs  )\   )\      )||";
+            m2.name = "Deer";
+            m2.weakpoint = "Sword";
+
+
+
+            //initialize room list:
+            roomList = new List<Room1>();
+            roomList.Add(new Room1(10, 5, false,monster));
+            roomList.Add(new Room1(10, 5, true,m2));
+
+            //Initialize weaponlist
+            weaponList = new List<Weapon>();
+
+
+            Weapon w1 = new Weapon();
+            w1.name = "Brick";
+            w1.image = @"  +----------+
+ /          /|
++----------+ +
+|          |/
++----------+";
+            w1.shortKey = "B";
+            Weapon w2 = new Weapon();
+            w2.name = "Sword";
+            w2.image = @"      /| ________________
+O|===|* >________________>
+      \|";
+            w2.shortKey = "S";
+
+            weaponList.Add(w1);
+            weaponList.Add(w2);
+
         }
 
         private static void info()

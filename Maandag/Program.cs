@@ -7,7 +7,6 @@ namespace Maandag
         static void Main(string[] args)
         {
            
-            Console.WriteLine("Hello World!");
 
             Console.SetWindowSize(80, 30);
             Game.start();
